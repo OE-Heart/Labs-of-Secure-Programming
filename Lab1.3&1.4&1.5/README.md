@@ -63,7 +63,7 @@ In Lab1.3, we have setup the WebGoat, and  known how to use the  WebGoat. To fin
 1. Visit the WebGoat page: http://localhost:8080/WebGoat/attack;  
 2. Select the Injection Flaw in  the left and start to do the Injection attack;  
 3. Each of the attack has a  solution, if you have no idea what to do, you can refer to the solution to help finish your work.  
-4. Select the Injection Flaw in  the left and start to do the XSS attack.   
+4. Select the Cross-Site Scripting (XSS) in  the left and start to do the XSS attack.   
 
 ## Examples 
 

