@@ -433,3 +433,35 @@ function LoadF2(token){
 ![image-20210530164711135](picture/image-20210530164711135.png)
 
 # 3 Web Attack
+
+## 3.1 Code Quality
+
+### Discover Clues in the HTML
+
+![image-20210531160210042](picture/image-20210531160210042.png)
+
+打开 Web 开发者工具，通过查看器检查元素。
+
+![image-20210531160341373](picture/image-20210531160341373.png)
+
+观察发现注释中遗留了账号为 admin，密码为 adminpw。将它们输入对应的文本框，点击 Login 按钮，结果如下：
+
+![image-20210531160409458](picture/image-20210531160409458.png)
+
+## 3.2 Concurrency
+
+### 3.2.1 Thread Safety Problems
+
+![image-20210531162705727](picture/image-20210531162705727.png)
+
+打开两个浏览器模拟两个用户同时发送请求，一个输入 dave，一个输入 jeff，快速点击两个 Submit 按钮，结果如下：
+
+![image-20210531163639975](picture/image-20210531163639975.png)
+
+### 3.2.2 Shopping Cart Concurrency Flaw
+
+![image-20210531163906483](picture/image-20210531163906483.png)
+
+打开两个浏览器模拟两个用户同时发送请求，一个先把贵的物品放入购物车，然后点 Purchase按钮；另一个再把便宜的物品放入购物车，点击 Update Cart 按钮，然后第一个就可以以第二个的价格确认购买，结果如下：
+
+![image-20210531165220850](picture/image-20210531165220850.png)
