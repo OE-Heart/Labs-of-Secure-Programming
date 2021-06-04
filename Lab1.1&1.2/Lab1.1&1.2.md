@@ -42,13 +42,86 @@
 </center>
 
 
+# 1 Web Environment Setup
 
-## 1 实验目的
+## 1.1 安装编辑器和浏览器
+
+对于编辑器来说，每个人都有不同的偏好，可以自由选择。可以选择功能丰富的IDE（集成开发环境），比如 PyCharm；也可以选择相对轻量的编辑器，比如 Atom 或 Sublime Text。我选择的是Visual Studio Code (VSCode)。VSCode 是一个轻量级但功能强大的源代码编辑器，可在桌面上运行，适用于 Windows、macOS 和 Linux。 它内置了对 JavaScript、TypeScript 和 Node.js 的支持，并为其他语言（例如 C++、C#、Java、Python、PHP、Go）和运行时（例如 .NET 和 Unity）提供了丰富的扩展生态系统。
+
+使用的浏览器是 Firefox。Firefox 是由 Mozilla 基金会及其子公司 Mozilla Corporation 开发的免费和开源网络浏览器。Firefox 使用 Gecko 布局引擎来呈现网页，该引擎实现了当前和预期的 Web 标准。
+
+## 1.2 安装 Python
+
+确保已经正确安装了 Python，执行下面的命令测试是否有报错：
+
+```shell
+python3 --version
+```
+
+![image-20210604154559573](picture/image-20210604154559573.png)
+
+## 1.3 创建虚拟环境
+
+虚拟环境是独立于 Python 全局环境的 Python 解释器环境，使用它的好处包括保持全局环境的干净、指定不同的依赖版本以及方便记录和管理依赖。我使用了 Anaconda 来管理虚拟环境。Anaconda 是用于科学计算（数据科学、机器学习应用程序、大规模数据处理、预测分析等）的 Python 和 R 编程语言的发行版，旨在简化包管理和部署。
+
+使用下面的命令即可为当前项目创建一个虚拟环境：
+
+```shell
+conda create -n web python=3.8
+```
+
+创建虚拟环境后，可以使用下面的命令来激活虚拟环境：
+
+```shell
+conda activate web
+```
+
+这时命令提示符前会显示虚拟环境的名称，表示已经激活成功：
+
+![image-20210604155020676](picture/image-20210604155020676.png)
+
+在激活虚拟环境后，无论操作系统和 Python 版本，都可以统一使用 `python` 和 `pip` 命令来调用当前虚拟环境内的 Python 和 pip 程序/二进制文件。
+
+## 1.4 安装 Flask
+
+Flask 是典型的微框架，作为 Web 框架来说，它仅保留了核心功能：请求响应处理和模板渲染。这两类功能分别由 Werkzeug（WSGI 工具库）完成和 Jinja（模板渲染库）完成。
+
+激活虚拟环境后，使用下面的命令来安装 Flask：
+
+```shell
+pip install Flask
+```
+
+这会把 Flask 以及相关的一些依赖包安装到对应的虚拟环境。
+
+编写一个简单的 Hello World 程序，查看 Flask 能否正常工作：
+
+```python
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello World!'
+
+if (__name__ == '__main__'):
+    app.run(host='127.0.0.1',port=5050)
+```
+
+运行结果如下图所示：
+
+<img src="picture/image-20210604160339032.png" alt="image-20210604160339032" style="zoom:80%;" />
+
+![image-20210604160252365](picture/image-20210604160252365.png)
+
+# 2 Implementation of Web Application
+
+## 2.1 实验目的
 
 1. 设计并实现一个精简的图书管理系统，具有入库、查询、借书、还书、借书证管理等基本功能
-2. 通过本次设计来加深对数据库的了解和使用,同时提高自身的系统编程能力
+2. 通过本次设计来加深对 Web Applicat 工作原理的认识和理解 ，同时提高自身的 Web 编程能力
 
-## 2 实验平台
+## 2.2 实验平台
 
 - 操作系统：Ubuntu 20.04.2 LTS x86_64
 
@@ -72,9 +145,9 @@
 
 <img src="picture/image-20210604114522790.png" alt="image-20210604114522790" style="zoom:80%;" />
 
-## 3 总体设计
+## 2.3 总体设计
 
-### 3.1 系统架构
+### 2.3.1 系统架构
 
 本系统主要包括管理员登录、图书入库、图书查询、借书管理、还书管理、借书证管理六大功能模块。各模块的功能描述如下：
 
@@ -93,9 +166,9 @@
 
 系统初始时仅有图书查询和管理员登录两个选项，图书查询为公共功能模块，不需要登录也可操作。管理员成功登录后，便可以选择进入图书入库、借书管理、还书管理、借书证管理功能。
 
-### 3.2 数据库表结构设计
+### 2.3.2 数据库表结构设计
 
-#### 3.2.1 图书信息表
+#### 2.3.2.1 图书信息表
 
 |  字段名  |   数据类型   |    说明    |
 | :------: | :----------: | :--------: |
@@ -125,7 +198,7 @@ create table book(
 )DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ```
 
-#### 3.2.2 借书证表
+#### 2.3.2.2 借书证表
 
 |   字段名   |  数据类型   |    说明    |
 | :--------: | :---------: | :--------: |
@@ -145,7 +218,7 @@ create table card(
 )DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ```
 
-#### 3.2.3 管理员表
+#### 2.3.2.3 管理员表
 
 |  字段名  |  数据类型   |      说明       |
 | :------: | :---------: | :-------------: |
@@ -165,7 +238,7 @@ create table admin(
 )DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ```
 
-#### 3.2.4 借书记录表
+#### 2.3.2.4 借书记录表
 
 |   字段名    |  数据类型   |       说明        |
 | :---------: | :---------: | :---------------: |
@@ -191,9 +264,9 @@ create table record(
 )DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ```
 
-## 4 详细设计
+## 2.4 详细设计
 
-### 4.1 图书查询
+### 2.4.1 图书查询
 
 图书查询界面如下图所示：
 
@@ -203,7 +276,7 @@ create table record(
 
 <img src="picture/image-20210604121529061.png" alt="image-20210604121529061" style="zoom:50%;" />
 
-### 4.2 管理员登录
+### 2.4.2 管理员登录
 
 管理员界面如下图所示：
 
@@ -217,7 +290,7 @@ create table record(
 
 <img src="picture/image-20210604122146932.png" alt="image-20210604122146932" style="zoom: 80%;" />
 
-### 4.3 批量入库
+### 2.4.3 批量入库
 
 批量入库界面如下图所示：
 
@@ -231,7 +304,7 @@ create table record(
 
 <img src="picture/image-20210604123012058.png" alt="image-20210604123012058" style="zoom:80%;" />
 
-### 4.4 借书证管理
+### 2.4.4 借书证管理
 
 借书证管理界面如图所示：
 
@@ -259,7 +332,7 @@ create table record(
 
 <img src="picture/image-20210604124035321.png" alt="image-20210604124035321" style="zoom:67%;" />
 
-### 4.5 借阅/归还图书
+### 2.4.5 借阅/归还图书
 
 借阅/归还图书界面如下图所示：
 
@@ -281,7 +354,7 @@ create table record(
 
 ![image-20210604125500226](picture/image-20210604125500226.png)
 
-### 4.6 图书管理
+### 2.4.6 图书管理
 
 图书管理界面如下图所示：
 
