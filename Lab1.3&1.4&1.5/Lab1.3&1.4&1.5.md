@@ -1,3 +1,5 @@
+
+
  
 
 <img src="picture/1.png" alt="1" style="zoom:80%;" />
@@ -15,13 +17,14 @@
 <center>
     <font face="楷体" size="5">姓名：欧翌昕</font>
 </center>
-
 <center>
     <font face="楷体" size="5">专业：软件工程</font>
 </center>
+
 <center>
     <font face="楷体" size="5">学号：3190104783</font>
 </center>
+
 
 <center>
     <font face="楷体" size="5">课程名称：安全编程技术</font>
@@ -121,11 +124,41 @@ sudo docker run -p 8080:8080 -t webgoat/webgoat-7.1
 
 ### 2.1.1 Command Injection
 
+![image-20210605234321017](picture/image-20210605234321017.png)
 
+开启网页请求拦截插件，这里使用的是 Chrome 浏览器的 Tamper Dev 插件。
+
+从下拉框中选择想要浏览的帮助文件，并点击“View”按钮，插件会拦截这一过程中的 HTTP 请求，结果如下：
+
+<img src="picture/image-20210605234735507.png" alt="image-20210605234735507" style="zoom:80%;" />
+
+修改 HTTP 请求中的内容，在 HeaderFile 字段修改为以下字符串：
+
+```
+AccessControlMatrix.help" %26 netstat -an %26 ifconfig%26 echo"
+```
+
+重新发送 HTTP 请求并刷新页面，结果如下：
+
+![image-20210605235609563](picture/image-20210605235609563.png)
 
 ### 2.1.2 Numeric SQL Injection
 
+![image-20210605235832372](picture/image-20210605235832372.png)
 
+开启网页请求拦截插件，这里使用的是 Chrome 浏览器的 Tamper Dev 插件。
+
+从下拉框中进行选择，并点击“Go”按钮，插件会拦截这一过程中的 HTTP 请求，结果如下：
+
+<img src="picture/image-20210606000000169.png" alt="image-20210606000000169" style="zoom:80%;" />
+
+修改 HTTP 请求中的内容，将 Request Body 中的内容修改为如下：
+
+<img src="picture/image-20210606000157088.png" alt="image-20210606000157088" style="zoom:80%;" />
+
+重新发送 HTTP 请求并刷新页面，结果如下：
+
+![image-20210606000251859](picture/image-20210606000251859.png)
 
 ### 2.1.3 Log Spoofing
 
