@@ -9,10 +9,7 @@
 <center><font face="Arial" size="6">Web Environment Setup & Implementation of Web Application</font>
 
 
-
-
-
-<img src="picture/2.png" alt="2" style="zoom:90%;" />
+<img src="picture/2.png" alt="2" style="zoom:80%;" />
 
 
 
