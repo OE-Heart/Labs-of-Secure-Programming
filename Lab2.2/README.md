@@ -1,77 +1,118 @@
-# Lab2.1 Setting up Ubuntu Linux with VMWare Player
+# Lab2.2 Running a Hello World Program in C using GCC
 
-## Overview
+#### **Overview**
 
-Linux is a great environment for programming because the tools are readily available. And, there some utilities you can only  access using Linux. You have a few options for running Linux on a  Windows PC:                
+The lab helps familiarize you with writing a simple Hello World program using C, the GCC compiler [link](http://gcc.gnu.org/), and Pico(a text editor, [link](http://en.wikipedia.org/wiki/Pico_(text_editor))). It uses Ubuntu VM created in Lab 2.1.Here is lab objective:                
 
-- Use Putty (or other terminal emulation software) to log into a remote Linux server via SSH.
-- Run Linux on your local Windows PC. Using :                         
-  - Dual boot computer                             
-    - This can be time consuming to setup
-    - This is good if you are doing lots of computational work or graphics
-  - Use cygwin                             
-    - People rarely do this anymore
-  - Use a Linux from a bootup disk                             
-    - This is great for certain uses
-  - You can set up Linux to run in virtually using VMware player -  So EASY!                             
-    - There are other utilities you can use such as [VirtualBox](https://www.virtualbox.org/).
-    - In our lab, we will use VMWare Player
+1. Learn to run a program in gcc.
+2. Learn to debug a program in gdb.
 
-The lab uses Ubuntu Linux.The cool thing about using  VMWare Player is that you can have different flavors of Linux running  (at the same time) in different players. This gives you a chance to  evaluate which one you like best. Here is lab objective:
+#### Steps
 
-1. Setting up Ubuntu Linux with VMWare Player
-2. Learn to edit a file in **vi** Text Editor.                
+1. Open the Terminal in Ubuntu.                
 
-## What is VMWare Player
+2. Create 'debug_me.c':
 
-​                VMware Player is software that enables users to easily  create and run virtual machines on a Windows or Linux PC. For additional information you can refer to the vmware website [link](http://www.vmware.com/products/player/faqs.html).                
+   ```c
+   #include 
+   
+   /* print a given string and a number if a pre-determined format. */
+   void
+   print_string(int num, char* string)
+   {
+       printf("String '%d' - '%s'\n", num, string);
+   }
+   
+   int
+   main(int argc, char* argv[])
+   {
+       int i;
+   
+       /* check for command line arguments */
+       if (argc < 2) { /* 2 - 1 for program name (argv[0]) and one for a param. */
+           printf("Usage: %s [ ...]\n", argv[0]);
+   	exit(1);
+       }
+   
+       /* loop over all strings, print them one by one */
+       for (argc--,argv++,i=1 ; argc > 0; argc--,argv++,i++) {
+           print_string(i, argv[0]);  /* function call */
+       }
+   
+       printf("Total number of strings: %d\n", i);
+      
+       return 0;
+   }
+   ```
 
-## What is Ubuntu
+3. Invoke gdb to debug 'debug_me.c':
 
-Ubuntu is a complete desktop Linux operating system,  freely available with both community and professional support. Ubuntu is suitable for both desktop and server use. Additional information about  Ubuntu can be found [link](https://help.ubuntu.com/12.04/installation-guide/i386/what-is-ubuntu.html).
+   ```shell
+   $ gcc -g debug_me.c -o debug_me
+   $ gdb debug_me
+   ```
 
-## What is Vi
+4. Run the program inside gdb:
 
-Vi is a screen-oriented text editor originally  created for the Unix operating system. Alternate editors for UNIX  environments include pico and emacs, a product of GNU.The advantage of  learning vi and learning it well is that one will find vi on all Unix  based systems and it does not consume an inordinate amount of system  resources. Vi works great over slow network ppp modem connections and on systems of limited resources. One can completely utilize vi without  departing a single finger from the keyboard. (No hand to mouse and  return to keyboard latency). 
+   ```shell
+   (gdb) run "hello, world" "goodbye, world"
+   ```
 
-The vi editor has two modes of operation:
+5. Set breakpoints. You can set breakpoints using two methods:
 
-1. **Command mode** which cause action to be taken on the file.
-2. **Insert mode** in which entered text is inserted into the file.
+   - Specifying a specific line of code to stop in:
 
-In the command mode, every character typed is a  command that does something to the text file being edited; a character  typed in the command mode may even cause the vi editor to enter the  insert mode. In the insert mode, every character typed is added to the  text in the file; pressing the  (Escape) key turns off the Insert mode.
-
-While there are a number of vi commands, just a  handful of these is usually sufficient for beginning vi users. You can  learn more from [link](http://www.cs.colostate.edu/helpdocs/vi.html).                
-
-## Steps
-
-1. Download & Install VMWare Player [link](https://my.vmware.com/web/vmware/free#desktop_end_user_computing/vmware_player/6_0).                
-
-2. Download Ubuntu [link](http://www.ubuntu.com/download/desktop) by choosing the option of downloading it onto a CD or USB stick. Remember to choose either 32-bit or 64-bit.
-   - Ubuntu 12.04 is recommended.
-   - A local copy is provided [link](http://121.40.131.130/sec_prog_2021_summer/files/ubuntu-12.04.4-desktop-i386.zip).
-
-3. Set up Ubuntu Linux with VMWare Player. 
-
-4. Edit a file in **vi** Text Editor. 
-
-   - Create a file using vi by entering the command 'vi hello.txt'.
-
+     ```shell
+     (gdb) break debug_me.c:9
      ```
-     $ vi hello.txt                
+
+   - Specifying a function name, to break every time it is being called:
+
+     ```shell
+     (gdb) break main
      ```
 
-   - Press i key to switch to Insert Mode.
+6. Step a command at a time. After setting breakpoints, you can run the program step by step. There are also two methods:
 
-   - Type the following: "Hello world!".
+   ```shell
+   (gdb) next
+   ```
 
-   - Press Esc key to go back to Commond Mode.
+   or
 
-   - Enter :wq to save and exit.
+   ```shell
+   (gdb) step
+   ```
 
-## Deliverables
+   You should tell the difference between "next" and "step".
 
-Send it to TA ([liuyuchen0921@zju.edu.cn](mailto:liuyuchen0921@zju.edu.cn)) before **2021.7.4 23:59:59**, with title: **SP2021-LAB2.1-ID-NAME**
+7. Print variables. When running the program step by step, you can print the contents of a variable with a command like this:
 
-- Your **lab** **report** will be the summary of detailed steps and observations. Some                   screenshots or photoes is included.
+   ```shell
+   (gdb) print i
+   ```
+
+8. Examine the function call stack. 
+
+   - Run the the program step by step to line 7. To examine the function call stack, type:
+
+     ```shell
+     (gdb) where
+     ```
+
+   - You will see currently executing function   "print_string" and the function "main" which called it. Then type "frame 0" and "frame 1" to see the difference:
+
+     ```shell
+     (gdb) frame 0
+     (gdb) print i
+     ...
+     (gdb) frame 1
+     (gdb) print i
+     ```
+
+#### Deliverables
+
+Send it to TA ([liuyuchen0921@zju.edu.cn](mailto:liuyuchen0921@zju.edu.cn)) before **2021.7.4 23:59:59**, with title: **SP2021-LAB2.2-ID-NAME**
+
+- Your **lab** **report** will be the summary of detailed steps and observations. Some screenshots or photoes is included.
 - All in one PDF document.
