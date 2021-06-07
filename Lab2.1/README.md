@@ -24,7 +24,7 @@ The lab uses Ubuntu Linux.The cool thing about using  VMWare Player is that you 
 
 ## What is VMWare Player
 
-​                VMware Player is software that enables users to easily  create and run virtual machines on a Windows or Linux PC. For additional information you can refer to the vmware website [link](http://www.vmware.com/products/player/faqs.html).                
+VMware Player is software that enables users to easily  create and run virtual machines on a Windows or Linux PC. For additional information you can refer to the vmware website [link](http://www.vmware.com/products/player/faqs.html).                
 
 ## What is Ubuntu
 
@@ -55,14 +55,10 @@ While there are a number of vi commands, just a  handful of these is usually suf
 
 4. Edit a file in **vi** Text Editor. 
 
-   - Create a file using vi by entering the command 'vi hello.txt'.
-
-     ```
-     $ vi hello.txt                
-     ```
+   - Create a file using vi by entering the command 'vi hello.txt'.          
 
    - Press i key to switch to Insert Mode.
-
+   
    - Type the following: "Hello world!".
 
    - Press Esc key to go back to Commond Mode.
