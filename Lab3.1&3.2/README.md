@@ -70,9 +70,11 @@ With such knowledge, your goal is to achieve the followings:
 
 In lab3.1, you don’t have to write a single  lab report, but submit the report together with lab3.2 (see details of lab 3.2 for  deadline).  
 
+---
 
 
-#### **Lab 3.2** Using eclipse for java static analysis
+
+# Lab 3.2 Using eclipse for java static analysis
 
 #### **Overview**
 
